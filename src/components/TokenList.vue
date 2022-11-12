@@ -12,6 +12,8 @@
           <!-- control heading -->
           <div class="flex-1 text-clip text-big text-center push-right if-medium">24h Change</div>
 
+          <button slot="trigger" class="form-btn bg-info-hover" @click="setRoute( '/alarmsall' )">Select all</button>
+
           <!-- control dropdown menus -->
           <div class="text-nowrap">
 
@@ -183,7 +185,11 @@
         </div>
 
       </div>
+
+      <AlarmsListAll :alarmsData="alarmsData" :pairData="this.tickerList2" @listCount="onAlarmsCount"></AlarmsListAll>
     </section>
+
+    
 
     <!-- list spinner -->
     <Spinner class="fixed" ref="spinner"></Spinner>
@@ -198,12 +204,13 @@ import TokenIcon from './TokenIcon.vue';
 import Dropdown from './Dropdown.vue';
 import Toggle from './Toggle.vue';
 import LineChart from './LineChart.vue';
+import AlarmsListAll from './AlarmsListAll.vue';
 
 // component
 export default {
 
   // component list
-  components: { Spinner, Search, TokenIcon, Dropdown, Toggle, LineChart },
+  components: { Spinner, Search, TokenIcon, Dropdown, Toggle, LineChart, AlarmsListAll },
 
   // component props
   props: {
@@ -213,6 +220,7 @@ export default {
     priceData: { type: Array, default() { return [] }, required: true },
     marketsData: { type: Object, default() { return {} }, required: true },
     tickerStatus: { type: Number, default: 0 },
+    alarmsData: { type: Array, default() { return [] } },
   },
 
   // comonent data
@@ -221,6 +229,8 @@ export default {
       searchStr: '',
       listCount: 0,
       listLeft: 0,
+      alarmsCount: 0,
+      tickerList2: []
     }
   },
 
@@ -269,6 +279,8 @@ export default {
         list = list.slice( 0, limit );
         this.listLeft = ( total - list.length );
       }
+      this.tickerList2 = list
+      //console.log("LIST", list, "NEW", this.tickerList2)
       return list;
     },
 
@@ -310,6 +322,11 @@ export default {
 
   // custom mounted
   methods: {
+
+    // update alarms count for this token
+    onAlarmsCount( count ) {
+      this.alarmsCount = count;
+    },
 
     // check if key is active sort option
     activeSort( column ) {

@@ -99,7 +99,9 @@ import AboutPage from './AboutPage.vue';
 import OptionsPage from './OptionsPage.vue';
 import HistoryPage from './HistoryPage.vue';
 import AlarmsList from './AlarmsList.vue';
+import AlarmsListAll from './AlarmsListAll.vue';
 import TokenPage from './TokenPage.vue';
+import AllTokenPage from './AllTokenPage.vue';
 
 // component
 export default {
@@ -115,9 +117,11 @@ export default {
     HistoryPage,
     TokenList,
     AlarmsList,
+    AlarmsListAll,
     // NewsPage,
     TradePage,
     TokenPage,
+    AllTokenPage,
   },
 
   // component data
@@ -214,6 +218,7 @@ export default {
       // modal routes
       this.$router.on( '/history', () => { this.showModal( 'HistoryPage', 'Recent Alert History' ) } );
       this.$router.on( '/alarms', () => { this.showModal( 'AlarmsList', 'Saved Price Alarms' ) } );
+      this.$router.on( '/alarmsall', () => { this.showModal( 'AllTokenPage', 'All Price Alarms' ) } );
       this.$router.on( '/about', () => { this.showModal( 'AboutPage', 'About This App' ) } );
       this.$router.on( '/options', () => { this.showModal( 'OptionsPage', 'Options & Settings' ) } );
       // symbol modal route

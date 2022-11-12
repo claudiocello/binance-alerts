@@ -5,6 +5,7 @@
       <div class="form-input flex-1 push-right">
         <div class="icon-chart-line push-right"></div>
         <input class="push-right" placeholder="0.00000000" name="price" v-model="curPrice" />
+        <input class="push-right" placeholder="0%" name="percent"/>
         <div class="text-grey">{{ pairData.asset }}</div>
       </div>
       <button type="submit" class="form-btn bg-success-hover icon-add iconLeft">Set Alarm</button>
@@ -101,7 +102,7 @@ export default {
     // save a new alert for this token
     saveAlarm( e ) {
       let { symbol, asset, close } = this.pairData;
-      let price = parseFloat( e.target.price.value ) || 0;
+      let price = e.target.percent.value ? (parseFloat( e.target.price.value * e.target.percent.value / 100 ) + parseFloat(e.target.price.value)) : parseFloat( e.target.price.value) || 0;
       let saved = this.$alarms.add( this.pairData, price );
       if ( !saved ) return this.$bus.emit( 'showNotice', 'Please enter a different '+ asset +' alarm price.', 'warning' );
       this.$bus.emit( 'showNotice', 'New alarm for '+ symbol +' set for '+ price.toFixed( 8 ) +' '+ asset +'.', 'success' );
