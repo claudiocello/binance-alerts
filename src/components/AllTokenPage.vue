@@ -1,7 +1,6 @@
 <template>
   <section :class="modalData.style">
 
-
     <!-- events and alarms -->
     <!-- <Tabs class="tokenpage-tabs" :data="{ alarmsCount, newsCount }">
       <section btn-class="icon-alarm iconLeft" :btn-name="[ 'Alarms ('+ alarmsCount +')' ]" active>

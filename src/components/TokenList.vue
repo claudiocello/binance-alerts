@@ -12,8 +12,6 @@
           <!-- control heading -->
           <div class="flex-1 text-clip text-big text-center push-right if-medium">24h Change</div>
 
-          <button slot="trigger" class="form-btn bg-info-hover" @click="setRoute( '/alarmsall' )">Select all</button>
-
           <!-- control dropdown menus -->
           <div class="text-nowrap">
 
@@ -108,6 +106,12 @@
       </div>
     </section>
 
+    <div class="container">
+
+    <AlarmsListAll :alarmsData="alarmsData" :pairData="this.tickerList2" @listCount="onAlarmsCount"></AlarmsListAll>
+
+    </div>
+
     <!-- empty list message -->
     <section class="push-bottom" v-if="!listCount">
       <div class="container">
@@ -186,7 +190,7 @@
 
       </div>
 
-      <AlarmsListAll :alarmsData="alarmsData" :pairData="this.tickerList2" @listCount="onAlarmsCount"></AlarmsListAll>
+      
     </section>
 
     

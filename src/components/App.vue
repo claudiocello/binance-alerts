@@ -218,6 +218,7 @@ export default {
       // modal routes
       this.$router.on( '/history', () => { this.showModal( 'HistoryPage', 'Recent Alert History' ) } );
       this.$router.on( '/alarms', () => { this.showModal( 'AlarmsList', 'Saved Price Alarms' ) } );
+      this.$router.on( '/allalarms', () => { this.showModal( 'AlarmsListAll', 'All Saved Price Alarms' ) } );
       this.$router.on( '/alarmsall', () => { this.showModal( 'AllTokenPage', 'All Price Alarms' ) } );
       this.$router.on( '/about', () => { this.showModal( 'AboutPage', 'About This App' ) } );
       this.$router.on( '/options', () => { this.showModal( 'OptionsPage', 'Options & Settings' ) } );
