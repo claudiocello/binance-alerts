@@ -10,125 +10,15 @@
           <Search class="light push-right" v-model="searchStr"></Search>
 
           <!-- control heading -->
-          <div class="flex-1 text-clip text-big text-center push-right if-medium">Trading Bot</div>
+          <div class="flex-1 text-clip text-big text-center push-right if-medium">Configuration Bot</div>
 
           <!-- control dropdown menus -->
-          <Dropdown>
-            <button slot="trigger" class="form-btn bg-primary-hover icon-down-open iconLeft">
-              <span v-if="socketStatus === 0">API Offline <i class="icon-close"></i></span>
-              <span v-if="socketStatus === 1">API Connecting... <i class="icon-signal"></i></span>
-              <span v-if="socketStatus === 2">API Active <i class="icon-check"></i></span>
-            </button>
-            <div slot="list" class="text-center">
-              <div class="form-label pad-h">Account API Connection</div>
-              <hr />
-              <div class="pad-h push-bottom">
-                <span v-if="!canConnect">You will need to provide your API keys in the Options page and enable it to connect <i class="icon-cry"></i></span>
-                <span v-else-if="!socketStatus">Currently not connected to your Binance account <i class="icon-cry"></i></span>
-                <span v-else-if="socketStatus">Currently connected to your Binance account <i class="icon-check"></i></span>
-              </div>
-              <div class="pad-h" :class="{ 'disabled': !canConnect }">
-                <button v-if="socketStatus === 0" class="form-btn bg-success-hover icon-close iconLeft" @click="initUserStream">Connect</button>
-                <button v-if="socketStatus === 1" class="form-btn bg-info-hover icon-close iconLeft">Waiting...</button>
-                <button v-if="socketStatus === 2" class="form-btn bg-danger-hover icon-close iconLeft" @click="stopUserStream">Disconnect</button>
-              </div>
-            </div>
-          </Dropdown>
 
         </div>
       </div>
     </section>
 
     <!-- account balances section -->
-    <section class="push-bottom">
-      <div class="container">
-        <!-- account balances list -->
-        <div class="card tablelist-wrap">
-          <!-- list headers -->
-          <div class="tablelist-header">
-            <div class="flex-row flex-middle flex-stretch">
-              <div class="tablelist-20 text-clip push-right">
-                <span class="clickable" @click="$sorter.sortOrder( 'balances', 'name', 'asc' )">
-                  Token <i class="text-primary" :class="$sorter.getStyles( 'balances', 'name' )"></i>
-                </span>
-              </div>
-              <div class="tablelist-20 text-nowrap push-right">
-                <span class="clickable" @click="$sorter.sortOrder( 'balances', 'asset', 'asc' )">
-                  Symbol <i class="text-primary" :class="$sorter.getStyles( 'balances', 'asset' )"></i>
-                </span>
-              </div>
-              <div class="tablelist-20 text-nowrap text-right push-right">
-                <span class="clickable" @click="$sorter.sortOrder( 'balances', 'total', 'desc' )">
-                  Total <i class="text-primary" :class="$sorter.getStyles( 'balances', 'total' )"></i>
-                </span>
-              </div>
-              <div class="tablelist-20 text-nowrap text-right push-right">
-                <span class="clickable" @click="$sorter.sortOrder( 'balances', 'free', 'desc' )">
-                  Free <i class="text-primary" :class="$sorter.getStyles( 'balances', 'free' )"></i>
-                </span>
-              </div>
-              <div class="tablelist-20 text-nowrap text-right">
-                <span class="clickable" @click="$sorter.sortOrder( 'balances', 'locked', 'desc' )">
-                  Locked <i class="text-primary" :class="$sorter.getStyles( 'balances', 'locked' )"></i>
-                </span>
-              </div>
-              <div class="tablelist-20 text-nowrap text-right">
-                Trade
-              </div>
-            </div>
-          </div>
-
-          <!-- list default greet message -->
-          <div class="tablelist-content pad-v text-center text-info pos-rel" v-if="!balancesList.length">
-            <div v-if="isDisconnected">
-              <div class="icon-info iconLarge"></div>
-              <div>Account balances will appear once connected to the API.</div>
-              <div v-if="socketError" class="text-danger">{{ socketError }}</div>
-              <button class="text-primary-hover icon-config iconLeft" @click="$router.setRoute( '/options' )">Manage Options</button>
-            </div>
-            <div v-if="isWaiting">
-              <div class="icon-signal iconLarge"></div>
-              <div class="text-warning fx fx-pulse">Waiting for account balances data to load...</div>
-            </div>
-            <div v-if="isConnected">
-              <div class="icon-help iconLarge"></div>
-              <div v-if="searchStr" class="text-danger">Could not find any results for: {{ searchStr }}</div>
-              <div v-else>No account balances data available.</div>
-            </div>
-          </div>
-
-          <!-- list items -->
-          <div class="tablelist-content" v-if="balancesList.length">
-            <div class="tablelist-row flex-row flex-middle flex-stretch" v-for="t in balancesList" :key="t.asset">
-              <div class="tablelist-20 text-clip text-bright push-right if-medium">{{ t.name }}</div>
-              <div class="tablelist-20 text-nowrap text-bright push-right">
-                <button class="text-primary-hover" title="Info" @click="$bus.emit( 'setRoute', t.route )" v-tooltip>{{ t.asset }}</button>
-              </div>
-              <div class="tablelist-20 text-nowrap text-primary text-right text-monospace push-right">{{ t.total | toFixed }}</div>
-              <div class="tablelist-20 text-nowrap text-bright text-right text-monospace push-right">{{ t.free | toFixed }}</div>
-              <div class="tablelist-20 text-nowrap text-danger text-right text-monospace">{{ t.locked | toFixed }}</div>
-              <div class="tablelist-20 text-nowrap text-right">
-                <button class="icon-chart-line iconLeft text-btn bg-info-hover" :disabled="!checkCanTradeToken( t.asset, t.free )" @click="initTokenTrade( t.asset, t.free )">Trade</button>
-              </div>
-            </div>
-          </div>
-
-          <!-- list bottom info -->
-          <div class="tablelist-header">
-            <div class="tablelist-row flex-row flex-middle flex-space">
-              <div class="push-right">
-                <a class="icon-network iconLeft" href="https://www.binance.com/userCenter/balances.html" target="_blank">Manage account on Binance</a>
-              </div>
-              <div class="text-clip">
-                <span class="text-info">Updated</span> &nbsp;
-                <span class="text-bright">{{ socketUpdated }}</span>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </section>
 
     <!-- bot section -->
     <section class="push-bottom">
@@ -136,42 +26,7 @@
 
         <div class="card pad-all">
 
-          <div class="flex-row flex-space">
-            <div class="text-nowrap text-bright push-right">
-              <span class="icon-chart-line iconLeft text-nowrap">Trade Bot</span>
-            </div>
-            <div class="text-nowrap push-right if-medium">
-              <span class="text-info">Bot Balance &nbsp;</span>
-              <span class="text-bright">{{ balanceRemain | toFixed( watchOptions.asset ) }} / {{ balanceTotal | toFixed( watchOptions.asset ) }}</span>
-              <span class="text-info">{{ watchOptions.asset }}</span>
-            </div>
-            <div class="text-nowrap push-right if-small">
-              <span class="text-info">Active Trades &nbsp;</span>
-              <span class="text-bright">{{ pendingTrades }} / {{ totalTrades }}</span>
-            </div>
-            <div class="text-nowrap">
-              <span class="text-info">Session P/L &nbsp;</span>
-              <span :class="{ 'text-gain': botProfit > 0, 'text-loss': botProfit < 0 }">{{ botProfit | toFixed( 3 ) }}%</span>
-            </div>
-          </div>
-
           <hr />
-
-          <div class="flex-row flex-middle flex-srtetch">
-            <div class="push-right">
-              <button class="form-btn bg-info-hover" :class="{ 'icon-up-open': formShow, 'icon-down-open': !formShow }" title="Toggle form" @click="toggleForm" v-tooltip></button>
-            </div>
-            <div class="flex-1 text-clip push-right">
-              <span class="text-warning">Bot {{ botActive ? 'is trading' : 'will trade' }} {{ countInfo }} using the options below.</span>
-            </div>
-            <div class="push-right">
-              <Toggle :class="{ 'disabled': botActive }" :text="'Live Mode'" v-model="liveMode"></Toggle>
-            </div>
-            <div>
-              <button v-if="botActive === false" class="form-btn bg-success-hover icon-play iconLeft" :disabled="!canStartBot" @click="startBot">Start the Bot</button>
-              <button v-if="botActive === true" class="form-btn bg-danger-hover icon-stop iconLeft" @click="stopBot">Bot running {{ botElapsed }} ...</button>
-            </div>
-          </div>
 
           <div class="bot-form pad-top" :class="{ 'visible': formShow }">
 
@@ -318,225 +173,7 @@
     </section>
 
     <!-- history section -->
-    <section class="push-bottom">
-      <div class="container">
 
-        <div class="card pad-all">
-
-          <!-- trade and order tabs -->
-          <Tabs :data="{ totalOrders, totalSessions, pendingTrades, totalTrades }">
-
-            <!-- trades tab section -->
-            <section btn-class="icon-chart-line iconLeft" :btn-name="'Bot Trades ('+ pendingTrades +'/'+ totalTrades +')'" active>
-              <div class="pad-v text-center text-info" v-if="!tradesList.length">
-                <div class="icon-chart-line iconLarge"></div>
-                <div>No trades data available.</div>
-              </div>
-              <div class="flex-list" v-if="tradesList.length">
-                <div class="flex-header flex-middle flex-space">
-                  <div class="iconWidth text-nowrap push-right if-medium"></div>
-                  <div class="flex-10 text-nowrap push-right">
-                    <span class="clickable" @click="$sorter.sortOrder( 'trades', 'pair', 'asc' )">Pair</span>
-                    <span class="text-info text-faded">/</span>
-                    <span class="clickable" @click="$sorter.sortOrder( 'trades', 'time', 'desc' )">Time</span>
-                  </div>
-                  <div class="flex-10 text-nowrap push-right"><span class="clickable" @click="$sorter.sortOrder( 'trades', 'active', 'asc' )">Status</span></div>
-                  <div class="flex-10 text-nowrap text-info push-right">Buy Price</div>
-                  <div class="flex-10 text-nowrap text-info push-right">Cur/Sell Price</div>
-                  <div class="flex-10 text-nowrap text-info push-right">P/L</div>
-                  <div class="text-nowrap text-right">
-                    <Dropdown>
-                      <button slot="trigger" class="text-primary-hover icon-config"></button>
-                      <ul slot="list">
-                        <li class="text-bright-hover icon-check iconLeft clickable" @click="cleanTradesList()">Remove Complete Trades</li>
-                        <li class="text-bright-hover icon-close iconLeft clickable" @click="flushTradeEntries()">Delete Trade Entries</li>
-                      </ul>
-                    </Dropdown>
-                  </div>
-                </div>
-                <div class="flex-item flex-middle flex-stretch" v-for="t of tradesList" :key="t.id">
-                  <div class="iconWidth text-nowrap push-right if-medium">
-                    <TokenIcon :image="t.image" :alt="t.name"></TokenIcon>
-                  </div>
-                  <div class="flex-10 text-nowrap push-right">
-                    <button class="text-primary-hover" @click="$router.setRoute( t.route )">{{ t.pair }}</button> <br />
-                    <span class="text-info">{{ t.time | toElapsed( 'ago', true ) }}</span>
-                  </div>
-                  <div class="flex-10 text-nowrap push-right">
-                    <span :class="tradeStatus( t.status, 1 )">{{ tradeStatus( t.status, 0 ) }}</span> <br />
-                    <span class="text-secondary">{{ t.amount | toMoney( 0 ) }}</span>
-                    <span class="text-info">{{ t.token }}</span>
-                  </div>
-                  <div class="flex-10 text-nowrap push-right">
-
-                    <span class="text-bright">{{ t.buyPrice | toFixed( t.asset ) }}</span> <br />
-                    <span class="text-info">{{ t.asset }}</span>
-                  </div>
-                  <div class="flex-10 text-nowrap push-right">
-                    <span class="text-bright">{{ t.sellPrice | toFixed( t.asset ) }}</span> <br />
-                    <span class="text-info">{{ t.asset }}</span>
-                  </div>
-                  <div class="flex-10 text-nowrap push-right">
-                    <span :class="{ 'text-gain': t.profit > 0, 'text-loss': t.profit < 0 }">{{ t.profit | toFixed( 3 ) }}%</span> <br />
-                    <span>
-                      <span v-if="t.profit > 0" class="text-info">Gain</span>
-                      <span v-else-if="t.profit < 0" class="text-info">Loss</span>
-                      <span v-else class="text-info">Same</span>
-                    </span>
-                  </div>
-                  <div class="text-nowrap text-right">
-                    <Dropdown>
-                      <button slot="trigger" class="icon-config"></button>
-                      <ul slot="list">
-                        <li v-if="t.active" class="text-gain-hover icon-stop iconLeft clickable" :class="{ 'disabled': !isConnected }" @click="sellActiveTrade( t.id )">Sell @ {{ t.sellPrice | toFixed( t.asset ) }}</li>
-                        <li class="text-bright-hover icon-visible iconLeft clickable" @click="markBotTradeActive( t.id )">Mark trade as Active</li>
-                        <li class="text-bright-hover icon-check iconLeft clickable" @click="markBotTradeSold( t.id )">Mark trade as Sold</li>
-                        <li class="text-danger-hover icon-close iconLeft clickable" @click="removeTradeEntry( t.id )">Remove from list</li>
-                      </ul>
-                    </Dropdown>
-                  </div>
-                </div>
-                <div class="flex-header flex-middle text-info flex-space">
-                  <div class="flex-1 push-right">
-                    <span class="icon-list iconLeft">{{ tradesListText }}</span>
-                  </div>
-                  <div>
-                    &nbsp;
-                  </div>
-                </div>
-              </div>
-            </section>
-
-            <!-- orders tab section -->
-            <section btn-class="icon-list iconLeft" :btn-name="'Order Activity ('+ totalOrders +')'">
-              <div class="pad-v text-center text-info" v-if="!ordersList.length">
-                <div class="icon-list iconLarge"></div>
-                <div>No orders data available.</div>
-              </div>
-              <div class="flex-list" v-if="ordersList.length">
-                <div class="flex-header flex-middle flex-space">
-                  <div class="iconWidth text-nowrap push-right if-medium">&nbsp;</div>
-                  <div class="flex-10 text-nowrap push-right">
-                    <span class="clickable" @click="$sorter.sortOrder( 'orders', 'pair', 'asc' )">Pair</span>
-                    <span class="text-info text-faded">/</span>
-                    <span class="clickable" @click="$sorter.sortOrder( 'orders', 'time', 'desc' )">Time</span>
-                  </div>
-                  <div class="flex-10 text-nowrap push-right"><span class="clickable" @click="$sorter.sortOrder( 'orders', 'side', 'asc' )">Order</span></div>
-                  <div class="flex-10 text-nowrap push-right"><span class="clickable" @click="$sorter.sortOrder( 'orders', 'status', 'asc' )">Status</span></div>
-                  <div class="flex-10 text-nowrap text-info push-right">Price</div>
-                  <div class="flex-10 text-nowrap text-info push-right if-medium">Fee</div>
-                  <div class="flex-10 text-nowrap text-info push-right">Total</div>
-                  <div class="text-nowrap text-right">
-                    <Dropdown>
-                      <button slot="trigger" class="text-primary-hover icon-config"></button>
-                      <ul slot="list">
-                        <li class="text-bright-hover icon-close iconLeft clickable" @click="cancelOpenOrders()">Cancel Open Orders</li>
-                        <li class="text-bright-hover icon-check iconLeft clickable" @click="clearOrdersList()">Remove Complete Orders</li>
-                      </ul>
-                    </Dropdown>
-                  </div>
-                </div>
-                <div class="flex-item flex-middle flex-space" v-for="o of ordersList" :key="o.id">
-                  <div class="iconWidth text-nowrap push-right if-medium">
-                    <TokenIcon :image="o.image" :alt="o.token"></TokenIcon>
-                  </div>
-                  <div class="flex-10 text-nowrap push-right">
-                    <button class="text-primary-hover" @click="$router.setRoute( o.route )">{{ o.pair }}</button> <br />
-                    <span class="text-info">{{ o.time | toElapsed( 'ago', true ) }}</span>
-                  </div>
-                  <div class="flex-10 text-nowrap push-right">
-                    <span :class="{ 'text-gain': o.side === 'BUY', 'text-loss': o.side === 'SELL' }">{{ o.type }} {{ o.side }}</span> <br />
-                    <span class="text-secondary">{{ o.filled | toMoney( 0 ) }}</span>
-                    <span class="text-info">/</span>
-                    <span class="text-secondary">{{ o.quantity | toMoney( 0 ) }}</span>
-                    <span class="text-info">{{ o.token }}</span>
-                  </div>
-                  <div class="flex-10 text-warning text-nowrap push-right">
-                    <span :class="{ 'text-danger': o.status === 'OPEN', 'text-success': o.status === 'FILLED' }">{{ o.status }}</span> <br />
-                    <span class="text-bright">{{ o.percent | toFixed( 2 ) }}%</span>
-                  </div>
-                  <div class="flex-10 text-nowrap push-right">
-                    <span class="text-info">{{ o.asset }} Price</span> <br />
-                    <span class="text-secondary">{{ o.price | toFixed( o.asset ) }}</span>
-                  </div>
-                  <div class="flex-10 text-nowrap push-right if-medium">
-                    <span class="text-info">{{ o.feeAsset ? o.feeAsset +' Total' : 'Total' }}</span> <br />
-                    <span class="text-bright">{{ o.feeAmount | toFixed( 8 ) }}</span>
-                  </div>
-                  <div class="flex-10 text-nowrap push-right">
-                    <span class="text-info">{{ o.asset }} Total</span> <br />
-                    <span class="text-bright">{{ o.total | toFixed( o.asset ) }}</span>
-                  </div>
-                  <div class="text-nowrap text-right">
-                    <Dropdown>
-                      <button slot="trigger" class="icon-config"></button>
-                      <ul slot="list">
-                        <li v-if="o.status === 'OPEN'" class="text-warning-hover icon-stop iconLeft clickable" @click="cancelOrder( o.symbol, o.id, o.quantity )">Cancel this order</li>
-                        <li class="text-danger-hover icon-close iconLeft clickable" @click="removeOrder( o.id )">Remove from list</li>
-                      </ul>
-                    </Dropdown>
-                  </div>
-                </div>
-              </div>
-            </section>
-
-            <!-- sessions tab section -->
-            <section btn-class="icon-calendar iconLeft" :btn-name="'Bot Sessions ('+ totalSessions +')'">
-              <div class="pad-v text-center text-info" v-if="!sessionsList.length">
-                <div class="icon-calendar iconLarge"></div>
-                <div>No bot sessions data available.</div>
-              </div>
-              <div class="flex-list" v-if="sessionsList.length">
-                <div class="flex-header flex-middle flex-space">
-                  <div class="flex-10 text-nowrap push-right"><span class="clickable" @click="$sorter.sortOrder( 'sessions', 'pair', 'asc' )">Pair</span></div>
-                  <div class="flex-10 text-nowrap push-right if-medium"><span class="clickable" @click="$sorter.sortOrder( 'sessions', 'time', 'desc' )">Time</span></div>
-                  <div class="flex-10 text-nowrap push-right"><span class="clickable" @click="$sorter.sortOrder( 'sessions', 'balance', 'desc' )">Balance</span></div>
-                  <div class="flex-10 text-nowrap push-right"><span class="clickable" @click="$sorter.sortOrder( 'sessions', 'complete', 'desc' )">Trades</span></div>
-                  <div class="flex-10 text-nowrap push-right"><span class="clickable" @click="$sorter.sortOrder( 'sessions', 'profit', 'desc' )">Profit</span></div>
-                  <div class="flex-10 text-nowrap text-info push-right">Duration</div>
-                  <div class="flex-10 text-nowrap push-right"><span class="clickable" @click="$sorter.sortOrder( 'sessions', 'live', 'desc' )">Live</span></div>
-                  <div class="text-nowrap text-right">
-                    <button class="text-bright-hover icon-close" title="Flush List" @click="flushSessionData" v-tooltip></button>
-                  </div>
-                </div>
-                <div class="flex-item flex-middle flex-stretch" v-for="s of sessionsList" :key="s.id">
-                  <div class="flex-10 text-nowrap push-right">
-                    <span class="text-primary">{{ s.pair }}</span>
-                  </div>
-                  <div class="flex-10 text-nowrap push-right">
-                    <span class="text-info">{{ s.time | toElapsed( 'ago', true ) }}</span>
-                  </div>
-                  <div class="flex-10 text-nowrap push-right">
-                    <span class="text-bright">{{ s.balance | toFixed( s.asset ) }}</span>
-                    <span class="text-info">{{ s.asset }}</span>
-                  </div>
-                  <div class="flex-10 text-nowrap push-right">
-                    <span class="text-bright">{{ s.complete | toMoney }}</span>
-                    <span class="text-info">/</span>
-                    <span class="text-bright">{{ s.total | toMoney }}</span>
-                  </div>
-                  <div class="flex-10 text-nowrap push-right">
-                    <span :class="{ 'text-gain': s.profit > 0, 'text-loss': s.profit < 0 }">{{ s.profit | toFixed( 3 ) }}%</span>
-                  </div>
-                  <div class="flex-10 text-nowrap push-right">
-                    <span class="text-bright">{{ s.elapsed }}</span>
-                  </div>
-                  <div class="flex-10 text-nowrap push-right">
-                    <span :class="{ 'text-success': s.live, 'text-warning': !s.live }">{{ s.live ? 'Yes' : 'No' }}</span>
-                  </div>
-                  <div class="text-right">
-                    <button class="text-loss-hover icon-close" title="Remove" @click="deleteSessionEntry( s.id )" v-tooltip></button>
-                  </div>
-                </div>
-              </div>
-            </section>
-
-          </Tabs>
-
-        </div>
-
-      </div>
-    </section>
 
 
   </main>
@@ -1246,7 +883,7 @@ export default {
       this.buildSnapshot();
       this.cleanTradesList();
       this.saveData( this.keys.options, this.watchOptions );
-      this.$bus.emit( 'showNotice', 'The trade bot is now active!', 'success' );
+      this.$bus.emit( 'showNotice', 'The configuration bot is now active!', 'success' );
     },
 
     // stop current bot session
@@ -1254,7 +891,7 @@ export default {
       if ( !this.botActive ) return;
       this.botActive = false;
       this.buildSessionData();
-      this.$bus.emit( 'showNotice', 'The trade bot has stopped running.', 'success' );
+      this.$bus.emit( 'showNotice', 'The configuration bot has stopped running.', 'success' );
     },
 
     // place real or simulated order based on some option

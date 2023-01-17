@@ -214,7 +214,7 @@ export default {
       // page routes
       this.$router.on( '/', () => { this.showPage( 'TokenList', 'Price List' ) } );
       this.$router.on( '/news', () => { this.showPage( 'NewsPage', 'Twitter News' ) } );
-      this.$router.on( '/trade', () => { this.showPage( 'TradePage', 'Trade Bot' ) } );
+      this.$router.on( '/trade', () => { this.showPage( 'TradePage', 'Configuration Bot' ) } );
       // modal routes
       this.$router.on( '/history', () => { this.showModal( 'HistoryPage', 'Recent Alert History' ) } );
       this.$router.on( '/alarms', () => { this.showModal( 'AlarmsList', 'Saved Price Alarms' ) } );

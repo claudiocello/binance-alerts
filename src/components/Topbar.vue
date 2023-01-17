@@ -75,7 +75,7 @@
                 <i class="icon-clock iconLeft"></i> Recent History <span class="text-grey" v-if="historyData.length">({{ historyData.length }})</span>
               </li>
               <li class="clickable text-bright-hover text-nowrap" @click="setRoute( '/trade' )">
-                <i class="icon-percent iconLeft"></i> Trade Bot
+                <i class="icon-percent iconLeft"></i> Configuration Bot
               </li>
               <li class="clickable text-bright-hover text-nowrap" @click="setRoute( '/options' )">
                 <i class="icon-config iconLeft"></i> App Options
