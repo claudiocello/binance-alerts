@@ -40,106 +40,106 @@
 
               <div class="form-input text-nowrap">
                 <span class="push-right text-primary">Only use</span>
-                <input class="flex-1 push-right" type="range" min="5" max="100" step="5" v-model="watchOptions.assetPercent" @change="onBotOptions" />
+                <input class="flex-1 push-right" type="range" min="5" max="100" step="5" name ="assetPercent" v-model="watchOptions.assetPercent" @change="onBotOptions" />
                 <span class="text-secondary">{{ watchOptions.assetPercent }}% {{ watchOptions.asset }}</span>
               </div>
 
               <div class="form-input text-nowrap">
                 <span class="push-right text-primary">Split trades</span>
-                <input class="flex-1 push-right" type="range" min="1" max="10" step="1" v-model="watchOptions.assetSplit" @change="onBotOptions" />
+                <input class="flex-1 push-right" type="range" min="1" max="10" step="1" name ="assetSplit" v-model="watchOptions.assetSplit" @change="onBotOptions" />
                 <span class="text-secondary">{{ watchOptions.assetSplit }}</span>
               </div>
 
               <div class="form-input text-nowrap">
-                <SelectMenu class="push-right" :css="'text-primary-hover'" v-model="watchOptions.filterType" @change="onBotOptions">
+                <SelectMenu name="filterType" class="push-right" :css="'text-primary-hover'" v-model="watchOptions.filterType" @change="onBotOptions">
                   <option value="allow">Only tokens</option>
                   <option value="deny">Skip tokens</option>
                 </SelectMenu>
-                <input class="flex-1" type="text" placeholder="TOKEN1 TOKEN2 ..." v-model="watchOptions.filterTokens" @change="onBotOptions"  />
+                <input name="filterTokens" class="flex-1" type="text" placeholder="TOKEN1 TOKEN2 ..." v-model="watchOptions.filterTokens" @change="onBotOptions"  />
               </div>
 
               <div class="form-input text-nowrap">
-                <SelectMenu class="push-right" :css="'text-primary-hover'" v-model="watchOptions.priceType" @change="onBotOptions">
+                <SelectMenu name="priceType" class="push-right" :css="'text-primary-hover'" v-model="watchOptions.priceType" @change="onBotOptions">
                   <option value="change">Price change</option>
                   <option value="gain">Price rise</option>
                   <option value="loss">Price drop</option>
                 </SelectMenu>
-                <input class="flex-1 push-right" type="range" min="0.0" max="100.0" step="0.5" v-model="watchOptions.priceChange" @change="onBotOptions" />
+                <input name="priceChange" class="flex-1 push-right" type="range" min="0.0" max="100.0" step="0.5" v-model="watchOptions.priceChange" @change="onBotOptions" />
                 <span class="text-secondary">{{ watchOptions.priceChange | toFixed( 1 ) }}%</span>
               </div>
 
               <div class="form-input text-nowrap">
                 <span class="push-right text-primary">Volume gain</span>
-                <input class="flex-1 push-right" type="range" min="0.0" max="100.0" step="0.5" v-model="watchOptions.volumeChange" @change="onBotOptions" />
+                <input name="volumeChange" class="flex-1 push-right" type="range" min="0.0" max="100.0" step="0.5" v-model="watchOptions.volumeChange" @change="onBotOptions" />
                 <span class="text-secondary">{{ watchOptions.volumeChange | toFixed( 1 ) }}%</span>
               </div>
 
               <div class="form-input text-nowrap">
                 <span class="push-right text-primary">Within last</span>
-                <input class="flex-1 push-right" type="range" min="0" max="60" step="1" v-model="watchOptions.timeLimit" @change="onBotOptions" />
+                <input name="timeLimit" class="flex-1 push-right" type="range" min="0" max="60" step="1" v-model="watchOptions.timeLimit" @change="onBotOptions" />
                 <div class="text-secondary">{{ watchOptions.timeLimit | toNoun( 'min', 'mins' ) }}</div>
               </div>
 
               <div class="form-input text-nowrap">
                 <span class="push-right text-primary">Sell profit</span>
-                <input class="flex-1 push-right" type="range" min="0.0" max="100.0" step="0.5" v-model="watchOptions.priceProfit" @change="onBotOptions" />
+                <input name="priceProfit" class="flex-1 push-right" type="range" min="0.0" max="100.0" step="0.5" v-model="watchOptions.priceProfit" @change="onBotOptions" />
                 <span class="text-secondary">{{ watchOptions.priceProfit| toFixed( 1 ) }}%</span>
               </div>
 
               <div class="form-input text-nowrap">
                 <span class="push-right text-primary">Stop loss</span>
-                <input class="flex-1 push-right" type="range" min="0.0" max="10.0" step="0.5" v-model="watchOptions.priceStop" @change="onBotOptions" />
+                <input name="priceStop" class="flex-1 push-right" type="range" min="0.0" max="10.0" step="0.5" v-model="watchOptions.priceStop" @change="onBotOptions" />
                 <span class="text-secondary">{{ watchOptions.priceStop | toFixed( 1 ) }}%</span>
               </div>
 
               <div class="form-input text-nowrap">
-                <SelectMenu class="push-right" :css="'text-primary-hover'" v-model="watchOptions.priceCheck" @change="onBotOptions">
+                <SelectMenu name="priceCheck" class="push-right" :css="'text-primary-hover'" v-model="watchOptions.priceCheck" @change="onBotOptions">
                   <option value="above">Price above</option>
                   <option value="below">Price below</option>
                 </SelectMenu>
-                <input class="flex-1 push-right" type="text" placeholder="0.00000000" v-model="watchOptions.price" @change="onBotOptions" />
+                <input name="price" class="flex-1 push-right" type="text" placeholder="0.00000000" v-model="watchOptions.price" @change="onBotOptions" />
                 <div class="text-secondary">{{ watchOptions.asset }}</div>
               </div>
 
               <div class="form-input text-nowrap">
-                <SelectMenu class="push-right" :css="'text-primary-hover'" v-model="watchOptions.volumeCheck" @change="onBotOptions">
+                <SelectMenu name="volumeCheck" class="push-right" :css="'text-primary-hover'" v-model="watchOptions.volumeCheck" @change="onBotOptions">
                   <option value="above">Volume above</option>
                   <option value="below">Volume below</option>
                 </SelectMenu>
-                <input class="flex-1 push-right" type="text" placeholder="0000" v-model="watchOptions.volume" @change="onBotOptions" />
+                <input name="volume" class="flex-1 push-right" type="text" placeholder="0000" v-model="watchOptions.volume" @change="onBotOptions" />
                 <div class="text-secondary">{{ watchOptions.asset }}</div>
               </div>
 
               <div class="form-input text-nowrap">
-                <SelectMenu class="push-right" :css="'text-primary-hover'" v-model="watchOptions.changeCheck" @change="onBotOptions">
+                <SelectMenu name="changeCheck" class="push-right" :css="'text-primary-hover'" v-model="watchOptions.changeCheck" @change="onBotOptions">
                   <option value="above">24h % above</option>
                   <option value="below">24h % below</option>
                 </SelectMenu>
-                <input class="flex-1 push-right" type="range" min="0.0" max="100.0" step="0.5" v-model="watchOptions.change" @change="onBotOptions" />
+                <input name="change" class="flex-1 push-right" type="range" min="0.0" max="100.0" step="0.5" v-model="watchOptions.change" @change="onBotOptions" />
                 <span class="text-secondary">{{ watchOptions.change | toFixed( 1 ) }}%</span>
               </div>
 
               <div class="form-input text-nowrap">
-                <SelectMenu class="push-right" :css="'text-primary-hover'" v-model="watchOptions.volatilityCheck" @change="onBotOptions">
+                <SelectMenu name="volatilityCheck" class="push-right" :css="'text-primary-hover'" v-model="watchOptions.volatilityCheck" @change="onBotOptions">
                   <option value="above">Volatility above</option>
                   <option value="below">Volatility below</option>
                 </SelectMenu>
-                <input class="flex-1 push-right" type="range" min="0.0" max="100.0" step="0.5" v-model="watchOptions.volatility" @change="onBotOptions" />
+                <input name="volatility" class="flex-1 push-right" type="range" min="0.0" max="100.0" step="0.5" v-model="watchOptions.volatility" @change="onBotOptions" />
                 <span class="text-secondary">{{ watchOptions.volatility | toFixed( 1 ) }}%</span>
               </div>
 
               <div class="form-input text-nowrap">
-                <SelectMenu class="push-right" :css="'text-primary-hover'" v-model="watchOptions.dangerCheck" @change="onBotOptions">
+                <SelectMenu name="dangerCheck" class="push-right" :css="'text-primary-hover'" v-model="watchOptions.dangerCheck" @change="onBotOptions">
                   <option value="above">Danger above</option>
                   <option value="below">Danger below</option>
                 </SelectMenu>
-                <input class="flex-1 push-right" type="range" min="0.0" max="100.0" step="0.5" v-model="watchOptions.danger" @change="onBotOptions" />
+                <input name="danger" class="flex-1 push-right" type="range" min="0.0" max="100.0" step="0.5" v-model="watchOptions.danger" @change="onBotOptions" />
                 <span class="text-secondary">{{ watchOptions.danger | toFixed( 1 ) }}%</span>
               </div>
 
               <div class="form-input text-nowrap">
                 <span class="push-right text-primary">Limit</span>
-                <SelectMenu class="flex-1" v-model="watchOptions.tradeLimit" @change="onBotOptions">
+                <SelectMenu name="tradeLimit" class="flex-1" v-model="watchOptions.tradeLimit" @change="onBotOptions">
                   <option value="multiple">Multiple trades per token</option>
                   <option value="active">Single active trade per token</option>
                   <option value="single">Single trade only per token</option>
@@ -148,7 +148,7 @@
 
               <div class="form-input text-nowrap">
                 <span class="push-right text-primary">Order type</span>
-                <SelectMenu class="flex-1" v-model="watchOptions.orderType" @change="onBotOptions">
+                <SelectMenu name="orderType" class="flex-1" v-model="watchOptions.orderType" @change="onBotOptions">
                   <option value="LIMIT">LIMIT orders</option>
                   <option value="MARKET">MARKET orders</option>
                 </SelectMenu>
@@ -156,7 +156,7 @@
 
               <div v-if="watchOptions.orderType === 'LIMIT'" class="form-input text-nowrap">
                 <span class="push-right text-primary">Execution</span>
-                <SelectMenu class="flex-1" v-model="watchOptions.orderTime" @change="onBotOptions">
+                <SelectMenu name="orderTime" class="flex-1" v-model="watchOptions.orderTime" @change="onBotOptions">
                   <option value="GTC">Good until canceled</option>
                   <option value="IOC">Immediate or cancel</option>
                   <option value="FOK">Fill all or cancel</option>
@@ -248,44 +248,44 @@ export default {
       watcher: new Watcher(),
       watchOptions: {
         // bot trading pair/currency
-        token: '',
-        asset: 'BTC',
+        token: localStorage.getItem('token') ? localStorage.getItem('token') :  '',
+        asset: localStorage.getItem('asset') ? localStorage.getItem('asset') :  'BTC',
         // bot allocated balance and trades
-        assetPercent: 50,
-        assetBalance: 0,
-        assetSplit: 3,
+        assetPercent: localStorage.getItem('assetPercent') ? localStorage.getItem('assetPercent') :  50,
+        assetBalance: localStorage.getItem('assetBalance') ? localStorage.getItem('assetBalance') :  0,
+        assetSplit: localStorage.getItem('assetSplit') ? localStorage.getItem('assetSplit') :  3,
         // price change/profit trigger and filters
-        priceType: 'loss',
-        priceChange: '2',
-        priceProfit: '5',
-        priceStop: 0,
-        priceCheck: 'above',
-        price: '',
+        priceType: localStorage.getItem('priceType') ? localStorage.getItem('priceType') :  'loss',
+        priceChange: localStorage.getItem('priceChange') ? localStorage.getItem('priceChange') :  '2',
+        priceProfit: localStorage.getItem('priceProfit') ? localStorage.getItem('priceProfit') :  '5',
+        priceStop: localStorage.getItem('priceStop') ? localStorage.getItem('priceStop') :  0,
+        priceCheck: localStorage.getItem('priceCheck') ? localStorage.getItem('priceCheck') :  'above',
+        price: localStorage.getItem('price') ? localStorage.getItem('price') :  '',
         // volume change trigger and filters
-        volumeType: 'gain',
-        volumeChange: '1',
-        volumeCheck: 'above',
-        volume: '',
+        volumeType: localStorage.getItem('volumeType') ? localStorage.getItem('volumeType') :  'gain',
+        volumeChange: localStorage.getItem('volumeChange') ? localStorage.getItem('volumeChange') :  '1',
+        volumeCheck: localStorage.getItem('volumeCheck') ? localStorage.getItem('volumeCheck') :  'above',
+        volume: localStorage.getItem('volume') ? localStorage.getItem('volume') :  '',
         // 24h percent change filters
-        changeCheck: 'below',
-        change: '0',
+        changeCheck: localStorage.getItem('changeCheck') ? localStorage.getItem('changeCheck') :  'below',
+        change: localStorage.getItem('change') ? localStorage.getItem('change') :  '0',
         // 24h price volitility filters
-        volatilityCheck: 'below',
-        volatility: '0',
+        volatilityCheck: localStorage.getItem('volatilityCheck') ? localStorage.getItem('volatilityCheck') :  'below',
+        volatility: localStorage.getItem('volatility') ? localStorage.getItem('volatility') :  '0',
         // recent pump/dump danger filter
-        dangerCheck: 'below',
-        danger: '0',
+        dangerCheck: localStorage.getItem('dangerCheck') ? localStorage.getItem('dangerCheck') :  'below',
+        danger: localStorage.getItem('danger') ? localStorage.getItem('danger') :  '0',
         // change timeframe filters
-        timeCheck: 'less',
-        timeLimit: '30',
+        timeCheck: localStorage.getItem('timeCheck') ? localStorage.getItem('timeCheck') :  'less',
+        timeLimit: localStorage.getItem('timeLimit') ? localStorage.getItem('timeLimit') : '30',
         // token back/white list filters
-        filterType: 'allow',
-        filterTokens: '',
+        filterType: localStorage.getItem('filterType') ? localStorage.getItem('filterType') :  'allow',
+        filterTokens: localStorage.getItem('filterTokens') ? localStorage.getItem('filterTokens') :  '',
         // order execution options
-        orderType: 'LIMIT',
-        orderTime: 'GTC',
+        orderType: localStorage.getItem('orderType') ? localStorage.getItem('orderType') :  'LIMIT',
+        orderTime: localStorage.getItem('orderTime') ? localStorage.getItem('orderTime') :  'GTC',
         // trade limit ( multiple, active, single )
-        tradeLimit: 'multiple',
+        tradeLimit: localStorage.getItem('tradeLimit') ? localStorage.getItem('tradeLimit') :  'multiple',
       },
     }
   },
@@ -629,6 +629,7 @@ export default {
     cleanTradesList() {
       this.tradesData = this.tradesData.filter( o => ( o.active && o.amount ) );
       this.saveData( this.keys.trades, this.tradesData );
+
     },
 
     // remove a trade from the list by id
@@ -860,12 +861,14 @@ export default {
 
     // when bot form options change
     onBotOptions( e ) {
-      let asset   = String( this.watchOptions.asset );
+      console.log(localStorage.getItem('dataSource'));
+      localStorage.setItem(e.currentTarget.name, e.currentTarget.value)
+      /*let asset   = String( this.watchOptions.asset );
       let percent = String( this.watchOptions.assetPercent );
       let factor  = Number( percent ) / 100;
       let coin    = this.balancesData.filter( b => ( b.asset === asset ) ).shift();
       this.watchOptions.assetBalance = coin ? +Number( coin.free * factor ).toFixed( 8 ) : 0;
-      this.buildSnapshot();
+      this.buildSnapshot();*/
     },
 
     // start new bot session
