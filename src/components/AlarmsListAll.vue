@@ -20,7 +20,6 @@
         Set All Alarms
       </button>
     </form>
-
   </section>
 </template>
 
@@ -103,16 +102,50 @@ export default {
       });
     },
 
-    testFun(e) {
-      this.pairData.map( item => {
-      let symbol = item.symbol;
-      let  asset = item.asset;
-      let close = item.close;
-      let price = e.target.percent.value ? (parseFloat( item.close * e.target.percent.value / 100 ) + parseFloat(item.close)) : parseFloat( item.close) || 0;
-      let saved = this.$alarms.add( item, price );
-      if ( !saved ) return this.$bus.emit( 'showNotice', 'Please enter a different '+ asset +' alarm price.', 'warning' );
-      this.$bus.emit( 'showNotice', 'New alarm for '+ symbol +' set for '+ price.toFixed( 8 ) +' '+ asset +'.', 'success' );
-      })
+    async testFun(e) {
+      this.pairData.map(async (item) => {
+        let symbol = item.symbol;
+        let asset = item.asset;
+        let close = item.close;
+        let price = e.target.percent.value
+          ? parseFloat((item.close * e.target.percent.value) / 100) +
+            parseFloat(item.close)
+          : parseFloat(item.close) || 0;
+        let saved = this.$alarms.add(item, price);
+        if (!saved)
+          return this.$bus.emit(
+            "showNotice",
+            "Please enter a different " + asset + " alarm price.",
+            "warning"
+          );
+        this.$bus.emit(
+          "showNotice",
+          "New alarm for " +
+            symbol +
+            " set for " +
+            price.toFixed(8) +
+            " " +
+            asset +
+            ".",
+          "success"
+        );
+        const alarms = [{ symbol: symbol, threshold: price }];
+        try {
+          await fetch(
+            "https://binance-alerts-backend-production.up.railway.app/set-alarms",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ alarms }),
+            }
+          );
+          console.log("Alarm set for", symbol);
+        } catch (error) {
+          console.error("Error setting alarm:", error);
+        }
+      });
     },
 
     // toggle existing alarm for as symbol by id
