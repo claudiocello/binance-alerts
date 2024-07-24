@@ -3,6 +3,7 @@
  */
 import Bus from './bus';
 import store from './store';
+//const utils = require('./utils');
 import utils from './utils';
 
 export default class Options extends Bus {

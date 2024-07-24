@@ -103,21 +103,27 @@ export default {
     },
 
     async testFun(e) {
-      this.pairData.map(async (item) => {
+      const alarms = [];
+      const percent = parseFloat(e.target.percent.value);
+
+      this.pairData.forEach((item) => {
         let symbol = item.symbol;
         let asset = item.asset;
         let close = item.close;
-        let price = e.target.percent.value
-          ? parseFloat((item.close * e.target.percent.value) / 100) +
-            parseFloat(item.close)
+        let price = percent
+          ? parseFloat((item.close * percent) / 100) + parseFloat(item.close)
           : parseFloat(item.close) || 0;
+
         let saved = this.$alarms.add(item, price);
-        if (!saved)
-          return this.$bus.emit(
+        if (!saved) {
+          this.$bus.emit(
             "showNotice",
             "Please enter a different " + asset + " alarm price.",
             "warning"
           );
+          return;
+        }
+
         this.$bus.emit(
           "showNotice",
           "New alarm for " +
@@ -129,24 +135,27 @@ export default {
             ".",
           "success"
         );
-        console.log("alarms setted");
-        const alarms = [{ symbol: symbol, threshold: price }];
-        try {
-          await fetch(
-            "https://binance-alerts-backend-production.up.railway.app/set-alarms",
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({ alarms }),
-            }
-          );
-          console.log("Alarm set for", symbol);
-        } catch (error) {
-          console.error("Error setting alarm:", error);
-        }
+
+        alarms.push({ symbol: symbol, threshold: price, percent: percent });
       });
+
+      console.log("Alarms setted");
+
+      try {
+        await fetch(
+          "https://binance-alerts-backend-production.up.railway.app/set-alarms",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ alarms }),
+          }
+        );
+        console.log("Alarms set successfully");
+      } catch (error) {
+        console.error("Error setting alarms:", error);
+      }
     },
 
     // toggle existing alarm for as symbol by id
@@ -171,10 +180,40 @@ export default {
     },
 
     // flush all alarms from the list
-    flushAlarms() {
+    async flushAlarms() {
       if (!confirm("Delete all alarms from the list?")) return;
+
+      // Clear alarms in the frontend
       this.$alarms.flush();
       this.$bus.emit("showNotice", "All alarms have been deleted.", "success");
+
+      // Clear alarms in the backend
+      try {
+        const response = await fetch(
+          "https://binance-alerts-backend-production.up.railway.app/clear-alarms",
+          {
+            method: "DELETE",
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to clear alarms on the backend");
+        }
+
+        console.log("Alarms cleared on the backend");
+        this.$bus.emit(
+          "showNotice",
+          "All alarms have been cleared on the backend.",
+          "success"
+        );
+      } catch (error) {
+        console.error("Error clearing alarms on the backend:", error);
+        this.$bus.emit(
+          "showNotice",
+          "Error clearing alarms on the backend.",
+          "error"
+        );
+      }
     },
   },
 

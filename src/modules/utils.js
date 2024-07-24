@@ -1,7 +1,7 @@
 /**
  * Common utils
  */
-module.exports = {
+const utils = {
 
   // convert url string into an anchor element (parser)
   parseUrl( url, prop ) {
@@ -341,3 +341,5 @@ module.exports = {
   },
 
 }
+
+export default utils;
