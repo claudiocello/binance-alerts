@@ -129,6 +129,7 @@ export default {
             ".",
           "success"
         );
+        console.log("alarms setted");
         const alarms = [{ symbol: symbol, threshold: price }];
         try {
           await fetch(
